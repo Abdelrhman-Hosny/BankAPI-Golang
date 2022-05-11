@@ -3,22 +3,22 @@ CREATE TABLE "Account" (
   "owner" varchar NOT NULL,
   "balance" bigint NOT NULL,
   "currency" varchar NOT NULL,
-  "created_at" timestampz NOT NULL DEFAULT 'now()'
+  "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 
 CREATE TABLE "entries" (
   "id" bigserial PRIMARY KEY,
-  "account_id" bigint,
+  "account_id" bigint NOT NULL,
   "amount" bigint NOT NULL,
-  "created_at" timestampz NOT NULL DEFAULT 'now()'
+  "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 
 CREATE TABLE "transfers" (
   "id" bigserial PRIMARY KEY,
-  "to_account_id" bigint,
-  "from_account_id" bigint,
+  "to_account_id" bigint NOT NULL,
+  "from_account_id" bigint NOT NULL,
   "amount" bigint NOT NULL,
-  "created_at" timestampz NOT NULL DEFAULT 'now()'
+  "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 
 CREATE INDEX ON "Account" ("owner");
