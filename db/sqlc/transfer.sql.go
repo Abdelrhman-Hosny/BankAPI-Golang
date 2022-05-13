@@ -107,10 +107,11 @@ func (q *Queries) ListTranfers(ctx context.Context, arg ListTranfersParams) ([]T
 	return items, nil
 }
 
-const updateTransfer = `-- name: UpdateTransfer :exec
+const updateTransfer = `-- name: UpdateTransfer :one
 UPDATE transfers
 SET amount = $2
 WHERE id = $1
+RETURNING id, to_account_id, from_account_id, amount, created_at
 `
 
 type UpdateTransferParams struct {
@@ -118,7 +119,15 @@ type UpdateTransferParams struct {
 	Amount int64 `json:"amount"`
 }
 
-func (q *Queries) UpdateTransfer(ctx context.Context, arg UpdateTransferParams) error {
-	_, err := q.db.ExecContext(ctx, updateTransfer, arg.ID, arg.Amount)
-	return err
+func (q *Queries) UpdateTransfer(ctx context.Context, arg UpdateTransferParams) (Transfer, error) {
+	row := q.db.QueryRowContext(ctx, updateTransfer, arg.ID, arg.Amount)
+	var i Transfer
+	err := row.Scan(
+		&i.ID,
+		&i.ToAccountID,
+		&i.FromAccountID,
+		&i.Amount,
+		&i.CreatedAt,
+	)
+	return i, err
 }
