@@ -20,6 +20,13 @@ LIMIT 1
 FOR NO KEY UPDATE;
 
 
+-- name: AddAccountBalance :one
+UPDATE accounts
+SET balance = balance + sqlc.arg(amount)
+WHERE id = sqlc.arg(id)
+RETURNING *;
+
+
 -- name: ListAccounts :many
 SELECT * FROM accounts
 ORDER BY id
