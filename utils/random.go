@@ -33,6 +33,10 @@ func RandomMoney() int64 {
 	return RandomInt(0, 100000)
 }
 
+func RandomEntry() int64 {
+	return RandomInt(-1000, 1000)
+}
+
 func RandomOwner() string {
 	return RandomString(10)
 }
